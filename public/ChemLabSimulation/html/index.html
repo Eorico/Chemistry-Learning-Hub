@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Periodic Table Learning</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script defer src="../script/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-title">Chemistry Learning Hub</div>
+    </nav>
+
+    <div class="sidebar">
+        <h2>Lessons</h2>
+        <ul>
+            <li><a href="#atoms"><span class="icons"></span>Atoms</a></li>
+            <li><a href="#protons"><span class="icons"></span>Protons</a></li>
+            <li><a href="#electrons"><span class="icons"></span>Electrons</a></li>
+            <li><a href="#neutrons"><span class="icons"></span>Neutrons</a></li>
+            <li><a href="#charge"><span class="icons"></span>Charge</a></li>
+            <li><a href="#Elements"><span class="icons"></span>Elements</a></li>
+            <li><a href="#balance-equation"><span class="icons"></span>Balance Equations</a></li>
+            <li><a href="#molecules"><span class="icons"></span>Molecules</a></li>
+        </ul>
+
+        <div class="miniFooter">
+            <p>ALL RIGHTS RESERVE CHEM-LEARNING-HUB@</p>
+        </div>
+    </div>
+
+    <div class="mainContent">
+
+        <div class="container">
+
+            <div class="content">
+
+                <!-- Chemistry Lab in the middle -->
+                <div class="atomBuilder">
+                    
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab('build')">Build Atom</div>
+                        <div class="tab" onclick="switchTab('equation')"> Chemical Equations</div>
+                    </div>
+                    
+                    <!-- Build Atom Tab -->
+                    <div class="tab-content active" id="buildTab">
+                        <div class="viewer-container">
+                            <div class="viewer3D" id="viewer3D">
+                                <div class="elementCard">
+                                    <div class="atomicNum" id="atomicNumDisplay">0</div>
+                                    <div class="elementSymbol" id="elementSymbol">?</div>
+                                    <div class="elementNameFull" id="elementNameFull">---</div>
+                                    <div class="elementWeight" id="elementWeight">0.00</div>
+                                </div>
+                                <div class="rotation-hint">🖱️ Drag to rotate</div>
+                                <div class="drop-zone" id="dropZone"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Chemical Equation Tab -->
+                    <div class="tab-content" id="equationTab">
+
+                        <div class="viewer-container">
+                            <div class="viewer3D viewer3D2" id="viewer3D2">
+                                <div class="rotation-hint">Molecular visualization</div>
+                                <div id="moleculeInfo" style="position: absolute; bottom: 20px; left: 20px; color: white; background: rgba(0,0,0,0.7); padding: 15px; border-radius: 8px; max-width: 300px;">
+                                    <div style="font-size: 1.1em; font-weight: bold; margin-bottom: 8px;">Enter a chemical equation above</div>
+                                    <div style="font-size: 0.9em; opacity: 0.9;">Examples: H2 + O2 = H2O, CH4 + O2 = CO2 + H2O</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                 <!-- Right Sidebar for Chapter List -->
+                <div class="rightSidebar">
+
+                    <div id="rightControlsPanel">
+                        <div class="controls">
+                            <div class="particle-control">
+                                <h4>Protons</h4>
+                                <div class="particle-icon proton-icon" draggable="true" data-particle="proton">
+                                    p⁺
+                                </div>
+                                <div class="counter-display" id="protonCount">0</div>
+                                <div class="drag-hint">Drag to 3D viewer</div>
+                            </div>
+
+                            <div class="particle-control" style="border-color: #adb5bd;">
+                                <h4>Neutrons</h4>
+                                <div class="particle-icon neutron-icon" draggable="true" data-particle="neutron">
+                                    n⁰
+                                </div>
+                                <div class="counter-display" id="neutronCount">0</div>
+                                <div class="drag-hint">Drag to 3D viewer</div>
+                            </div>
+
+                            <div class="particle-control" style="border-color: #4ecdc4;">
+                                <h4>Electrons</h4>
+                                <div class="particle-icon electron-icon" draggable="true" data-particle="electron">
+                                    e⁻
+                                </div>
+                                <div class="counter-display" id="electronCount">0</div>
+                                <div class="drag-hint">Drag to 3D viewer</div>
+                            </div>
+                        </div>
+
+                        <div class="elementInfo">
+                            <div class="info-grid">
+                                <div class="info-item"><strong>Charge</strong><br><span id="charge">0</span></div>
+                                <div class="info-item"><strong>Type</strong><br><span id="atomType">Neutral</span></div>
+                            </div>
+
+                            <div class="ElementInput-box">
+                                <label for="ElementInput"> Input Element:</label>
+                                <input type="text" id="ElementInput" placeholder="Ex: C or Carbon ">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="rightEquationsPanel"> 
+                        <div class="equation-panel">
+                            <h3>Chemical Equation Calculator</h3>
+                            <div class="equation-input-group">
+                                <input type="text" class="equation-input" id="equationInput" 
+                                    placeholder="Ex: CH4 + 2O2 = CO2 + 2H2O ">
+                            </div>
+                            <div class="equation-result" id="equationResult">
+                                <div class="result-label">Balanced Equation:</div>
+                                <div class="result-value" id="balancedEquation"></div>
+                                <div class="molecule-display" id="moleculeDisplay"></div>
+                                <div class="info-badges" id="equationBadges"></div>
+                            </div>
+                        </div>
+
+                        <div class="equationReminder">
+                            <div class="sample">
+                                Examples: H2 + O2 = H2O, CH4 + O2 = CO2 + H2O
+                            </div>
+                        </div>
+
+                        <div class="equationReminder process">
+                            <h4>📝 How to Process Chemical Equations</h4>
+                            <ol>
+                                <li>Write the **unbalanced equation** with correct chemical formulas.</li>
+                                <li>Count the number of **atoms of each element** on both sides.</li>
+                                <li>Add **coefficients** to balance the atoms (never change subscripts).</li>
+                                <li>Check that **all elements** have the same number on both sides.</li>
+                                <li>Confirm that the **total charge** is balanced if ions are involved.</li>
+                                <li>Write the **final balanced equation**.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
