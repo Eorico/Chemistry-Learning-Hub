@@ -775,21 +775,43 @@ function buildAtomFromInput() {
     document.getElementById('ElementInput').value = '';
 }
 
-function enterKeys(input, func) {
-    input.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            func();
-            input.value = '';
+function keyPressLesson() {
+    document.addEventListener('keydown', (e) => {
+        if (overlay.style.display === 'block' && e.key === 'Enter') {
+            const lessonTitle = document.getElementById('lessonTitle').textContent.toLowerCase();
+            if (['atoms', 'protons', 'electrons', 'neutrons', 'charge'].some(l => lessonTitle.includes(l))) {
+                switchTab('build'); 
+                overlay.style.display = 'none'; 
+            } else if (lessonTitle.includes('equation')) {
+                switchTab('equation');
+                overlay.style.display = 'none';
+            }
         }
-    })
+    });
 }
 
-enterKeys(elementInput, buildAtomFromInput);
-enterKeys(equationInput, calculateEquation);
+keyPressLesson();
+
+function sidebarCollapse(load) {
+    const toggleBtn = document.getElementById('toggleSidebar');
+    const sidebar = document.querySelector('.sidebar');
+
+    if (load === 'load') {
+        sidebar.classList.toggle('expanded');
+    }
+
+    toggleBtn.addEventListener('mouseenter', () => {
+        if (overlay.style.display === 'block' || overlay.style.display === '') {
+            overlay.style.display = 'none';
+        }  
+        sidebar.classList.toggle('expanded');
+    });
+}
 
 
 window.addEventListener('load', () => {
     initThreeJS();
+    sidebarCollapse('load');
     updateDisplay();
     setupMouseControls();
     setupDragAndDrop();
@@ -829,6 +851,7 @@ document.body.appendChild(overlay);
 document.querySelectorAll('.sidebar ul li a').forEach(link => {
     link.addEventListener('mouseenter', e => {
         e.preventDefault();
+        overlay.style.display = 'block';
         const lessonId = link.getAttribute('href').substring(1);
         const title = link.textContent;
         document.getElementById('lessonTitle').textContent = title;
