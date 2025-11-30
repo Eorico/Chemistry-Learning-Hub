@@ -712,6 +712,11 @@ button:hover {
     font-size: 15px;
 }
 
+.invalid-input {
+    border: 2px solid red !important;
+    box-shadow: 0 0 6px rgba(255, 0, 0, 0.5);
+}
+
 /* Responsive for smaller screens */
 @media (max-width: 968px) {
     .rightSidebar {
