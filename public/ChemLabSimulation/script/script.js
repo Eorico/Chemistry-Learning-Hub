@@ -799,7 +799,7 @@ function keyPressLesson() {
     document.addEventListener('keydown', (e) => {
         if (overlay.style.display === 'block' && e.key === 'Enter') {
             const lessonTitle = document.getElementById('lessonTitle').textContent.toLowerCase();
-            if (['atoms', 'protons', 'electrons', 'neutrons', 'charge'].some(l => lessonTitle.includes(l))) {
+            if (['atoms', 'protons', 'electrons', 'neutrons', 'charge', 'elements'].some(l => lessonTitle.includes(l))) {
                 switchTab('build'); 
                 overlay.style.display = 'none'; 
             } else if (lessonTitle.includes('equation')) {
@@ -818,14 +818,65 @@ function sidebarCollapse(load) {
 
     if (load === 'load') {
         sidebar.classList.toggle('expanded');
+        // Show the default atom lesson when sidebar expands on load
+        setTimeout(() => {
+            if (sidebar.classList.contains('expanded')) {
+                showDefaultAtomLesson();
+            }
+        }, 100);
     }
 
-    toggleBtn.addEventListener('mouseenter', () => {
+    toggleBtn.addEventListener('click', () => {
         if (overlay.style.display === 'block' || overlay.style.display === '') {
             overlay.style.display = 'none';
         }  
         sidebar.classList.toggle('expanded');
+        
+        // Show the default atom lesson when sidebar expands
+        if (sidebar.classList.contains('expanded')) {
+            setTimeout(() => {
+                showDefaultAtomLesson();
+            }, 100);
+        }
     });
+}
+
+// Add this helper function to show the default atom lesson
+function showDefaultAtomLesson() {
+    const atomTitle = document.getElementById('lessonTitle');
+    const atomContent = document.getElementById('lessonContent');
+
+    if (atomTitle && atomContent) {
+        atomTitle.textContent = 'Atoms';
+        atomContent.innerHTML = 
+        `
+            <p>
+            - are the basic particles of the chemical elements and the fundamental building blocks of matter. 
+            An atom consists of a nucleus of protons and generally neutrons, surrounded by an electromagnetically bound swarm of electrons. 
+            The chemical elements are distinguished from each other by the number of protons that are in their atoms. For example, any atom 
+            that contains 11 protons is sodium, and any atom that contains 29 protons is copper.
+            Atoms with the same number of protons but a different number of neutrons are called isotopes of the same element.
+            </p>
+
+            <div>
+                <img 
+                    src="../assets/example.jpg"
+                    alt="Atom Diagram"
+                >
+            </div>
+            
+            <p>
+            - are extremely small, typically around 100 picometers across. 
+            A human hair is about a million carbon atoms wide. Atoms are smaller than the shortest wavelength of visible light, 
+            which means humans cannot see atoms with conventional microscopes. They are so small that accurately predicting their behavior using classical physics is not possible due to quantum effects.
+            <span style="color: red;">PRESS ENTER TO PROCEED TO SIMULATION</span>
+            </p>
+        `;
+
+        // Show the overlay
+        overlay.style.display = 'block';
+        overlay.classList.add('show');
+    }
 }
 
 function invalidInputs(input) {
@@ -852,6 +903,8 @@ function invalidInputs(input) {
             const validPattern = /^[A-Za-z0-9+\-=() ]*$/;
             if (validPattern.test(value) && value.length > 0) {
                 equationInput.classList.remove("invalid-input");
+            } else if (value === "") {
+                equationInput.classList.add("invalid-input");
             } else {
                 equationInput.classList.add("invalid-input");
             }
@@ -1261,39 +1314,8 @@ document.querySelectorAll('.sidebar ul li a').forEach(link => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-    const atomTitle = document.getElementById('lessonTitle');
-    const atomContent = document.getElementById('lessonContent');
-
-    if (atomTitle && atomContent) {
-        atomTitle.textContent = 'Atoms';
-        atomContent.innerHTML = 
-        `
-            <p>
-            - are the basic particles of the chemical elements and the fundamental building blocks of matter. 
-            An atom consists of a nucleus of protons and generally neutrons, surrounded by an electromagnetically bound swarm of electrons. 
-            The chemical elements are distinguished from each other by the number of protons that are in their atoms. For example, any atom 
-            that contains 11 protons is sodium, and any atom that contains 29 protons is copper.
-            Atoms with the same number of protons but a different number of neutrons are called isotopes of the same element.
-            </p>
-
-            <div>
-                <img 
-                    src="../assets/example.jpg"
-                    alt="Atom Diagram"
-                >
-            </div>
-            
-            <p>
-            - are extremely small, typically around 100 picometers across. 
-            A human hair is about a million carbon atoms wide. Atoms are smaller than the shortest wavelength of visible light, 
-            which means humans cannot see atoms with conventional microscopes. They are so small that accurately predicting their behavior using classical physics is not possible due to quantum effects.
-            <span style="color: red;">PRESS ENTER TO PROCEED TO SIMULATION</span>
-            </p>
-
-        `;
-
-        overlay.classList.add('show');
-    }
+    showDefaultAtomLesson();
+    overlay.classList.add('show');
 });
 
 // itong part is the library that i use for the model simulation
